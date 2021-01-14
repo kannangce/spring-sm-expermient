@@ -2,7 +2,9 @@ package com.demo;
 
 import com.demo.core.data.States;
 import com.demo.core.data.Transitions;
+import com.demo.sm.actions.SMActions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.state.State;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 
 @Service
+@DependsOn("SMActions")
 public class AppRunner {
 
 
@@ -38,5 +41,4 @@ public class AppRunner {
         curr = stateMachine.getState();
         System.out.println(curr.getId());
     }
-
 }

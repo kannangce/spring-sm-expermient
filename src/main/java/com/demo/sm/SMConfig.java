@@ -2,6 +2,7 @@ package com.demo.sm;
 
 import com.demo.core.data.States;
 import com.demo.core.data.Transitions;
+import com.demo.sm.actions.SMActions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,9 +21,12 @@ import java.util.EnumSet;
 @Configuration
 public class SMConfig {
 
+    @Autowired
+    SMActions actions;
+
     @Configuration
     @EnableStateMachine
-    public static class Config extends EnumStateMachineConfigurerAdapter<States, Transitions> {
+    public class Config extends EnumStateMachineConfigurerAdapter<States, Transitions> {
 
         @Override
         public void configure(StateMachineStateConfigurer<States, Transitions> states)
@@ -41,6 +45,7 @@ public class SMConfig {
                     .source(States.S1)
                     .target(States.S2)
                     .event(Transitions.T1)
+                    .action((s)->actions.onTransitionT1(s), (s) -> actions.onError(s))
                     .and()
                     .withExternal()
                     .source(States.S2)
