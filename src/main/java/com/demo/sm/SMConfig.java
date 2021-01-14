@@ -18,6 +18,10 @@ import org.springframework.statemachine.config.model.StateMachineModelFactory;
 
 import java.util.EnumSet;
 
+import static com.demo.core.data.States.*;
+import static com.demo.core.data.Transitions.T1;
+import static com.demo.core.data.Transitions.T2;
+
 @Configuration
 public class SMConfig {
 
@@ -33,8 +37,9 @@ public class SMConfig {
                 throws Exception {
             states
                     .withStates()
-                    .initial(States.S1)
-                    .states(EnumSet.allOf(States.class));
+                    .initial(S1)
+                    .states(EnumSet.allOf(States.class))
+                    .choice(S3);
         }
 
         @Override
@@ -42,20 +47,23 @@ public class SMConfig {
                 throws Exception {
             transitions
                     .withExternal()
-                    .source(States.S1)
-                    .target(States.S2)
-                    .event(Transitions.T1)
-                    .action((s)->actions.onTransitionT1(s), (s) -> actions.onError(s))
+                    .source(S1)
+                    .target(S2)
+                    .event(T1)
+                    .action((s) -> actions.onTransitionT1(s), (s) -> actions.onError(s))
                     .and()
                     .withExternal()
-                    .source(States.S2)
-                    .target(States.S3)
-                    .event(Transitions.T2)
+                    .source(S2)
+                    .target(S3)
+                    .event(T2)
                     .and()
-                    .withExternal()
-                    .source(States.S3)
-                    .target(States.S4)
-                    .event(Transitions.T3);
+                    .withChoice()
+                    .source(S3)
+                    .first(PS3_1, actions.onTransitionT3_X("1"))
+                    .then(PS3_2, actions.onTransitionT3_X("2"))
+                    .then(PS3_3, actions.onTransitionT3_X("3"))
+                    .last(PS3_4);
+
         }
     }
 }
