@@ -29,7 +29,7 @@ public class SMConfig {
     SMActions actions;
 
     @Configuration
-    @EnableStateMachine
+    @EnableStateMachineFactory
     public class Config extends EnumStateMachineConfigurerAdapter<States, Transitions> {
 
         @Override
